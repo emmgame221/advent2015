@@ -1,12 +1,12 @@
-use clap::{command, Arg};
+use clap::{Arg, command};
 
 mod problems;
 
 use crate::problems::*;
 
 fn main() {
-    let matches = command!() 
-        .arg(Arg::new("problems").short('p').long("problems"))
+    let matches = command!()
+        .arg(Arg::new("problems").short('p').long("problems").default_value("all"))
         .get_matches();
     let args = matches
         .get_many::<String>("problems")
@@ -24,6 +24,9 @@ fn main() {
                 "2" => {
                     day2::print_solution();
                 }
+                "3" => {
+                    day3::print_solution();
+                }
                 _ => {
                     println!("Unknown Problem")
                 }
@@ -35,4 +38,5 @@ fn main() {
 fn run_all() {
     day1::print_solution();
     day2::print_solution();
+    day3::print_solution();
 }
