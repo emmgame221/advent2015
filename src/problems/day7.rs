@@ -10,26 +10,15 @@ pub fn print_solution() {
         .lines()
         .map(|line| line.unwrap())
         .collect();
-    let (p1, p2) = solution(&lines);
+    let p1 = solution(&lines);
     println!("Day 7 Part 1: {}", p1);
-    println!("Day 7 Part 2: {}", p2);
 }
 
-fn solution(lines: &[String]) -> (u16, u16) {
-    let mut wires: HashMap<String, Option<u16>> = HashMap::new();
-    let mut p1 = 0;
+fn solution(lines: &[String]) -> u16 {
+    let mut wires: HashMap<&str, u16> = HashMap::new();
     loop {
-        if let Some(&Some(val)) = wires.get("a") {
-            if p1 == 0 {
-                p1 = val;
-                let keys: Vec<String> = wires.keys().map(|key| key.clone()).collect();
-                for key in keys {
-                    wires.insert(key, None);
-                }
-                wires.insert("b".to_string(), Some(val));
-            } else {
-                return (p1, val);
-            }
+        if let Some(&val) = wires.get("a") {
+            return val;
         }
         for line in lines {
             let parts: Vec<&str> = line.split(' ').collect();
@@ -38,11 +27,10 @@ fn solution(lines: &[String]) -> (u16, u16) {
                 assert_eq!(parts[2], "->");
                 let input = parts[1];
                 let output = parts[3];
-                if let Some(&Some(in_val)) = wires.get(input) {
-                    wires.insert(output.to_string(), Some(!in_val));
+                if let Some(&in_val) = wires.get(input) {
+                    wires.insert(output, !in_val);
                 } else {
-                    wires.insert(input.to_string(), None);
-                    wires.insert(output.to_string(), None);
+                    continue;
                 }
             } else if parts[1] == "->" {
                 assert_eq!(parts.len(), 3);
@@ -50,12 +38,11 @@ fn solution(lines: &[String]) -> (u16, u16) {
                 let output = parts[2];
                 if let Ok(val) = input.parse::<u16>() {
                     let output = parts[2];
-                    wires.insert(output.to_string(), Some(val));
-                } else if let Some(&Some(in_val)) = wires.get(input) {
-                    wires.insert(output.to_string(), Some(in_val));
+                    wires.insert(output, val);
+                } else if let Some(&in_val) = wires.get(input) {
+                    wires.insert(output, in_val);
                 } else {
-                    wires.insert(input.to_string(), None);
-                    wires.insert(output.to_string(), None);
+                    continue;
                 }
             } else {
                 assert_eq!(parts.len(), 5);
@@ -65,37 +52,27 @@ fn solution(lines: &[String]) -> (u16, u16) {
                 let in2 = parts[2];
                 let output = parts[4];
                 let in1_val = if let Ok(val) = in1.parse::<u16>() {
-                    Some(val)
-                } else if let Some(&Some(val)) = wires.get(in1) {
-                    Some(val)
+                    val
+                } else if let Some(&val) = wires.get(in1) {
+                    val
                 } else {
-                    wires.insert(in1.to_string(), None);
-                    None
+                    continue;
                 };
                 let in2_val = if let Ok(val) = in2.parse::<u16>() {
-                    Some(val)
-                } else if let Some(&Some(val)) = wires.get(in2) {
-                    Some(val)
+                    val
+                } else if let Some(&val) = wires.get(in2) {
+                    val
                 } else {
-                    wires.insert(in2.to_string(), None);
-                    None
+                    continue;
                 };
-                let out_val = {
-                    if let Some(in1_val) = in1_val
-                        && let Some(in2_val) = in2_val
-                    {
-                        match op {
-                            "AND" => Some(in1_val & in2_val),
-                            "OR" => Some(in1_val | in2_val),
-                            "LSHIFT" => Some(in1_val << in2_val),
-                            "RSHIFT" => Some(in1_val >> in2_val),
-                            _ => panic!(),
-                        }
-                    } else {
-                        None
-                    }
+                let out_val = match op {
+                    "AND" => in1_val & in2_val,
+                    "OR" => in1_val | in2_val,
+                    "LSHIFT" => in1_val << in2_val,
+                    "RSHIFT" => in1_val >> in2_val,
+                    _ => panic!(),
                 };
-                wires.insert(output.to_string(), out_val);
+                wires.insert(output, out_val);
             }
         }
     }
