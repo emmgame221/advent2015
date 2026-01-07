@@ -24,9 +24,6 @@ fn part_one(lines: &[String]) -> usize {
         resolved_count += line.len() - 2;
         let mut slice = &line[1..line.len() - 1];
         while let Some(i) = slice.iter().position(|c| *c == b'\\') {
-            if slice.len() == 1 {
-                break;
-            }
             if slice[i + 1] == b'x' {
                 resolved_count -= 3;
                 slice = &slice[i + 4..];
