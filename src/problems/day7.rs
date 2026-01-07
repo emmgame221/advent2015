@@ -11,7 +11,8 @@ pub fn print_solution() {
         .map(|line| line.unwrap())
         .collect();
     let p1 = solution(&lines);
-    println!("Day 7 Part 1: {}", p1);
+    println!("Day 7 Answer: {}", p1);
+    println!("To get part 2 answer, add \"{} -> b\" as the first line of the input file");
 }
 
 fn solution(lines: &[String]) -> u16 {
