@@ -12,7 +12,7 @@ pub fn print_solution() {
         .collect();
     let p1 = solution(&lines);
     println!("Day 7 Answer: {}", p1);
-    println!("To get part 2 answer, add \"{} -> b\" as the first line of the input file");
+    println!("To get part 2 answer, add \"{} -> b\" as the first line of the input file", p1);
 }
 
 fn solution(lines: &[String]) -> u16 {
