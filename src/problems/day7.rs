@@ -1,18 +1,18 @@
 use std::{
-    collections::HashMap,
-    fs::File,
-    io::{BufRead, BufReader},
+    collections::HashMap, fs::File, io::{BufRead, BufReader}
 };
 
 pub fn print_solution() {
     let file = File::open("./inputs/day7.txt").unwrap();
-    let lines: Vec<String> = BufReader::new(file)
+    let mut lines: Vec<String> = BufReader::new(file)
         .lines()
         .map(|line| line.unwrap())
         .collect();
     let p1 = solution(&lines);
-    println!("Day 7 Answer: {}", p1);
-    println!("To get part 2 answer, add \"{} -> b\" as the first line of the input file", p1);
+    println!("Day 7 Part 1: {}", p1);
+    lines.insert(0, format!("{} -> b", p1));
+    let p2 = solution(&lines);
+    println!("Day 7 Part 2: {}", p2);
 }
 
 fn solution(lines: &[String]) -> u16 {
